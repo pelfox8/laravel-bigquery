@@ -1,0 +1,33 @@
+{
+    "name": "pelfox/laravel-bigquery",
+    "description": "Laravel BigQuery",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "google/cloud-bigquery": "1.*",
+        "illuminate/database": "10.*",
+        "illuminate/events": "10.*",
+        "illuminate/support": "10.*"
+    },
+    "keywords": [
+        "laravel",
+        "eloquent",
+        "bigquery",
+        "database",
+        "model"
+    ],
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Pelfox\\LaravelBigQuery\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+              "Pelfox\\LaravelBigQuery\\LaravelBigQueryServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
