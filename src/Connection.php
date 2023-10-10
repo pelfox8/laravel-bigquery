@@ -86,7 +86,8 @@ class Connection extends BaseConnection
         $data = [];
         foreach ($info['rows'] as $index => $row) {
             foreach ($row['f'] as $key => $value) {
-                $data[$index][$key] = $this->getValue($value, $fields[$key]);
+                $field = $fields[$key];
+                $data[$index][$field['name']] = $this->getValue($value, $field);
             }
         }
         return $data;
