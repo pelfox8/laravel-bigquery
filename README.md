@@ -3,6 +3,11 @@ Laravel Bigquery
 
 This package allows you to use Query Builder and Eloquent for queries in Bigquery.
 
+### Installation
+
+```
+composer require pelfox/laravel-bigquery
+```
 
 ### Using
 
