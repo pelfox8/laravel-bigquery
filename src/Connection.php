@@ -13,6 +13,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Str;
 use Pelfox\LaravelBigQuery\Query\Grammar;
 use Pelfox\LaravelBigQuery\Query\Processor;
+use Pelfox\LaravelBigQuery\Types\BaseType;
 use Throwable;
 
 class Connection extends BaseConnection
@@ -231,7 +232,7 @@ class Connection extends BaseConnection
     {
         $type = gettype($value);
         return match ($type) {
-            'object',
+            'object' => $value instanceof BaseType ? $value->formattedQueryValue() : (string)$value,
             'string' => '"' . str_replace('"', '\"', (string)$value) . '"',
             'double',
             'integer' => $value,
