@@ -127,4 +127,24 @@ class Grammar extends BaseGrammar
 
         return "json_extract_scalar($field$path) is not null";
     }
+
+    protected function convertBindingDateValue($type, Builder $query, $where): void
+    {
+        if (in_array($type, ['date', 'time'])){
+            return;
+        }
+        foreach ($query->bindings['where'] as $index => $binding){
+            if ($binding === $where['value']){
+                $query->bindings['where'][$index] = (int)$binding;
+            }
+        }
+    }
+
+    protected function dateBasedWhere($type, Builder $query, $where): string
+    {
+        $value = $this->parameter($where['value']);
+        $this->convertBindingDateValue($type, $query, $where);
+
+        return 'extract(' . $type. ' from ' .$this->wrap($where['column']).') '.$where['operator'].' '.$value;
+    }
 }
