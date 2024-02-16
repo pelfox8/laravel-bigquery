@@ -15,7 +15,7 @@ class LaravelBigQueryServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind('bigquery', function () {
+        $this->app->singleton('bigquery', function () {
             return new BigQueryClient([
                 'keyFilePath' => config('database.connections.bigquery.keyFilePath'),
                 'authCache' => $this->getAuthCache()
