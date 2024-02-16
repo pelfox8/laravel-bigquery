@@ -2,17 +2,37 @@
 
 namespace Pelfox\LaravelBigQuery;
 
+use EinarHansen\Cache\CacheItemPool;
+use Google\Cloud\BigQuery\BigQueryClient;
+use Illuminate\Cache\Repository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use Psr\Cache\CacheItemPoolInterface;
 
 class LaravelBigQueryServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->app->bind('bigquery', function () {
+            return new BigQueryClient([
+                'keyFilePath' => config('database.connections.bigquery.keyFilePath'),
+                'authCache' => $this->getAuthCache()
+            ]);
+        });
+
         Connection::resolverFor('bigquery', function ($connection, $database, $prefix, $config) {
             return new \Pelfox\LaravelBigQuery\Connection($config);
         });
+    }
+
+    /**
+     * @throws BindingResolutionException
+     */
+    protected function getAuthCache(): CacheItemPoolInterface
+    {
+        return new CacheItemPool($this->app->make(Repository::class));
     }
 
     public function boot(): void

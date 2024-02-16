@@ -11,6 +11,7 @@ use Google\Cloud\BigQuery\QueryResults;
 use Illuminate\Database\Connection as BaseConnection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Str;
+use Pelfox\LaravelBigQuery\Facades\BigQuery;
 use Pelfox\LaravelBigQuery\Query\Grammar;
 use Pelfox\LaravelBigQuery\Query\Processor;
 use Pelfox\LaravelBigQuery\Types\BaseType;
@@ -29,9 +30,8 @@ class Connection extends BaseConnection
      */
     public function __construct($config = [])
     {
-        $this->bigquery = new BigQueryClient([
-            'keyFilePath' => $config['keyFilePath'] ?? ''
-        ]);
+        $this->bigquery = BigQuery::getFacadeRoot();
+
         if (empty($config['dataset'])) {
             throw new Exception('"dataset" not found in database config');
         }

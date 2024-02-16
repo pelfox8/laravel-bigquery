@@ -18,9 +18,17 @@ Add code in database config in section 'connections':
     'driver' => 'bigquery',
     'database' => '',
     'prefix' => '',
-    'dataset' => 'replace on dataset from bigquery',
-    'keyFilePath' => 'replace on path to service account config from google cloud',
+    // default the id of the dataset to request
+    'dataset' => 'replace on dataset from bigquery', // required
+    //  The full path to your service account credentials .json file retrieved from the Google Developers Console.
+    'keyFilePath' => 'path to file', // required
 ],
+```
+
+Facade:
+
+```php
+\Pelfox\LaravelBigQuery\Facades\BigQuery::dataset('dataset')->...
 ```
 
 Using in Query Builder or Eloquent:
