@@ -28,9 +28,4 @@ abstract class BaseType implements \JsonSerializable, \Stringable
     {
         return $this->value;
     }
-
-    public function escapeValue($value = null): string
-    {
-        return '"' . str_replace('"', '\"', (string)($value ?: $this->value)) . '"';
-    }
 }

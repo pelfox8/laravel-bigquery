@@ -2,6 +2,8 @@
 
 namespace Pelfox\LaravelBigQuery\Types;
 
+use Pelfox\LaravelBigQuery\Escape;
+
 class RepeatedMode extends BaseType
 {
 
@@ -10,15 +12,14 @@ class RepeatedMode extends BaseType
         parent::__construct((array)$value);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function formattedQueryValue()
     {
         $values = [];
         foreach ($this->value as $item){
-            if ($item instanceof BaseType){
-                $values[] = $item->formattedQueryValue();
-            }else{
-                $values[] = (string)$item;
-            }
+            $values[] = Escape::any($item);
         }
         $join = implode(', ', $values);
         return "[$join]";

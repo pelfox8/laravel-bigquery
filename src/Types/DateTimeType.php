@@ -3,6 +3,7 @@
 namespace Pelfox\LaravelBigQuery\Types;
 
 use Illuminate\Support\Carbon;
+use Pelfox\LaravelBigQuery\Escape;
 
 class DateTimeType extends BaseType
 {
@@ -19,7 +20,7 @@ class DateTimeType extends BaseType
 
     public function formattedQueryValue(): string
     {
-        return $this->escapeValue($this->__toString());
+        return Escape::string($this->__toString());
     }
 
     public function __toString(): string
