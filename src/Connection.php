@@ -81,7 +81,25 @@ class Connection extends BaseConnection
         $query = $this->bindingParameters($query, $bindings);
         $qr = $this->bigquery->query($query, $this->getConnectionOptions($options))
             ->defaultDataset($this->defaultDataset);
-        return $this->bigquery->runQuery($qr);
+
+        try {
+            return $this->bigquery->runQuery($qr);
+        }catch (Exception $e) {
+            throw $this->getException($e, $query);
+        }
+    }
+
+    protected function getException($e, $query): Exception
+    {
+        $message = $e->getMessage();
+        if (json_validate($message)){
+            $error = json_decode($message, true);
+            if (isset($error['error']['message'])) {
+                $message = $error['error']['message'];
+            }
+        }
+
+        return new Exception('BigQuery Error: ' . $message . '. SQL: ' . $query);
     }
 
     protected function getConnectionOptions($options): array

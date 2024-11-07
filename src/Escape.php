@@ -25,12 +25,20 @@ class Escape
         };
     }
 
-    public static function string($value, $wrapperSymbol = '"'): string
+    public static function string($value): string
     {
-        if (str_contains($value, PHP_EOL) || str_contains($value, $wrapperSymbol)){
-            return '"""' . $value . '"""';
-        }
-        return $wrapperSymbol . $value . $wrapperSymbol;
+        $search = ["\\", "\n", "\r", "'", '"'];
+        $replace = ["\\\\", "\\n", "\\r", "\'", '\"'];
+
+        return '"'.str_replace($search, $replace, $value).'"';
+    }
+
+    public static function json($value): string
+    {
+        $search = ["\\", "\n", "\r", "'", "\""];
+        $replace = ["\\\\", "\\n", "\\r", "\'", '\\"'];
+
+        return "json'".str_replace($search, $replace, json_encode($value))."'";
     }
 
     /**

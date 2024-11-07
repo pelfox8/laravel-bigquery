@@ -8,9 +8,7 @@ class JsonType extends BaseType
 {
     public function formattedQueryValue(): string
     {
-        $value = json_encode($this->value);
-
-        return "json" . Escape::string($value, "'");
+        return Escape::json($this->value);
     }
 
     public function __toString(): string

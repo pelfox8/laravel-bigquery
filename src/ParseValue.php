@@ -53,7 +53,7 @@ class ParseValue
 
         if (isset($schema['mode'])) {
             if ($schema['mode'] === 'REPEATED') {
-                return self::getRepeatedValue($value, $schema);
+                return $this->getRepeatedValue($value, $schema);
             }
 
             if ($schema['mode'] === 'NULLABLE' && $value === null) {

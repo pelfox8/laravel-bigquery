@@ -25,6 +25,10 @@ class LaravelBigQueryServiceProvider extends ServiceProvider
         Connection::resolverFor('bigquery', function ($connection, $database, $prefix, $config) {
             return new \Pelfox\LaravelBigQuery\Connection($config);
         });
+
+        Connection::macro('json', function ($value){
+            return $this->raw(Escape::json($value));
+        });
     }
 
     /**
