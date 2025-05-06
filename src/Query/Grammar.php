@@ -33,7 +33,7 @@ class Grammar extends BaseGrammar
         return $value === '*' ? $value : '`' . $value . '`';
     }
 
-    public function wrapTable($table)
+    public function wrapTable($table, $prefix = null)
     {
         if ($this->isExpression($table)) {
             return $this->getValue($table);
