@@ -8,7 +8,6 @@ use Google\Cloud\BigQuery\BigQueryClient;
 use Google\Cloud\BigQuery\Dataset;
 use Google\Cloud\BigQuery\QueryResults;
 use Illuminate\Database\Connection as BaseConnection;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Str;
 use Pelfox\LaravelBigQuery\Facades\BigQuery;
 use Pelfox\LaravelBigQuery\Query\Grammar;
@@ -46,22 +45,14 @@ class Connection extends BaseConnection
         $this->useDefaultPostProcessor();
     }
 
-    function getDefaultQueryGrammar(): Grammar
+    public function getDefaultQueryGrammar(): Grammar
     {
-        return (new Grammar)
-            ->setConnection($this)
-            ->setTablePrefix($this->tablePrefix)
-            ->setSuffixTable($this->getConfig('suffix') ?: '');
+        return new Grammar($this);
     }
 
     protected function getDefaultPostProcessor(): Processor
     {
         return new Processor();
-    }
-
-    public function table($table, $as = null): Builder
-    {
-        return $this->query()->from($table, $as);
     }
 
     /**
@@ -178,24 +169,25 @@ class Connection extends BaseConnection
                 continue;
             }
 
+            $levelBeingCommitted = $this->transactions;
+
             try {
                 if ($this->transactions == 1) {
                     $this->fireConnectionEvent('committing');
                     $this->commit();
                 }
 
-                if ($this->afterCommitCallbacksShouldBeExecuted()) {
-                    $this->transactionsManager?->commit($this->getName());
-                }
+                $this->transactions = max(0, $this->transactions - 1);
+
             } catch (Throwable $e) {
                 $this->handleCommitTransactionException(
                     $e, $currentAttempt, $attempts
                 );
 
                 continue;
-            } finally {
-                $this->transactions = max(0, $this->transactions - 1);
             }
+
+            $this->transactionsManager?->commit($this->getName(), $levelBeingCommitted, $this->transactions);
 
             $this->fireConnectionEvent('committed');
 

@@ -3,11 +3,10 @@
     "description": "Laravel BigQuery",
     "type": "library",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "google/cloud-bigquery": "1.*",
-        "illuminate/database": "^10|^11",
-        "illuminate/events": "^10|^11",
-        "illuminate/support": "^10|^11",
+        "illuminate/database": "^12",
+        "illuminate/support": "^12",
         "einar-hansen/laravel-psr-6-cache": "^1.0"
     },
     "keywords": [
@@ -26,9 +25,10 @@
     "extra": {
         "laravel": {
             "providers": [
-              "Pelfox\\LaravelBigQuery\\LaravelBigQueryServiceProvider"
+                "Pelfox\\LaravelBigQuery\\LaravelBigQueryServiceProvider"
             ]
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

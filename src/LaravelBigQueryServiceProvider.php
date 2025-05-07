@@ -6,7 +6,6 @@ use EinarHansen\Cache\CacheItemPool;
 use Google\Cloud\BigQuery\BigQueryClient;
 use Illuminate\Cache\Repository;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Psr\Cache\CacheItemPoolInterface;
@@ -22,12 +21,12 @@ class LaravelBigQueryServiceProvider extends ServiceProvider
             ]);
         });
 
-        Connection::resolverFor('bigquery', function ($connection, $database, $prefix, $config) {
-            return new \Pelfox\LaravelBigQuery\Connection($config);
-        });
+        $this->app->resolving('db', function ($db) {
+            $db->extend('bigquery', function ($config, $name) {
+                $config['name'] = $name;
 
-        Connection::macro('json', function ($value){
-            return $this->raw(Escape::json($value));
+                return new Connection($config);
+            });
         });
     }
 
